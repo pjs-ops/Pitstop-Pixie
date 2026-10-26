@@ -1,0 +1,397 @@
+import { CarComponent } from '../types';
+
+export const CAR_COMPONENTS: CarComponent[] = [
+  // 1. Aerodynamics
+  {
+    id: 'front_wing',
+    name: 'Front Wing & Endplates',
+    category: 'aerodynamics',
+    categoryLabel: 'Aerodynamics',
+    meshId: 'mesh_front_wing',
+    explodedOffset: [0, 0, 1.4], // push forward along Z
+    anchorPoint: [0, 0.25, 2.23], // exact center of front wing mainplane
+    description: 'The primary aerodynamic appendage at the nose of the car that directs incoming air over, around, and under the chassis.',
+    primaryFunction: 'Generates up to 30% of total front downforce and conditions turbulent air away from the front tires (outwash).',
+    engineeringSignificance: 'Complex carbon-fiber multi-element cascade. It is the very first surface air touches, dictating aerodynamic efficiency for the entire car.',
+    performanceImplications: 'Damaging a front wing endplate can lose 0.5 to 1.5 seconds per lap due to immediate front understeer and dirty air disruption under the floor.',
+    analogy: 'Like an upside-down airplane wing that pushes the front wheels into the tarmac so you can turn razor-sharp at 300 km/h.',
+    keyStats: [
+      { label: 'Downforce Share', value: '~25-30%' },
+      { label: 'Material', value: 'Pre-preg Carbon Fiber' },
+      { label: 'Elements Allowed', value: 'Maximum 4 flaps' },
+    ],
+    relatedComponentIds: ['floor', 'tires_front', 'monocoque'],
+    cameraPreset: {
+      position: [0, 1.2, 5.0],
+      target: [0, 0.3, 2.2],
+    },
+  },
+  {
+    id: 'rear_wing',
+    name: 'Rear Wing & DRS Flap',
+    category: 'aerodynamics',
+    categoryLabel: 'Aerodynamics',
+    meshId: 'mesh_rear_wing',
+    explodedOffset: [0, 0.45, -1.5], // lift up and push rearwards
+    anchorPoint: [0, 0.85, -2.39], // exact DRS flap location
+    description: 'The high-mounted aerodynamic wing assembly that produces massive rear grip and features the Drag Reduction System (DRS).',
+    primaryFunction: 'Provides rear-axle downforce to keep tires glued under high-speed cornering and under hard acceleration out of corners.',
+    engineeringSignificance: 'Features an active upper flap that hydraulically opens by 85mm when DRS is enabled within 1.0 second of a car ahead, shedding ~20-30 km/h worth of drag.',
+    performanceImplications: 'Without rear downforce, the rear of the car would spin out instantly at high speeds. DRS turns defending into intense tactical overtaking.',
+    analogy: 'Imagine a giant hand pressing down on the back wheels—and at the press of a button, opening its fingers to let the wind slip through for a turbo speed burst.',
+    keyStats: [
+      { label: 'DRS Opening Gap', value: '85 mm' },
+      { label: 'Top Speed Gain', value: '+15 to 25 km/h' },
+      { label: 'Rear Downforce Share', value: '~35%' },
+    ],
+    relatedComponentIds: ['diffuser', 'gearbox', 'front_wing'],
+    cameraPreset: {
+      position: [0, 1.8, -4.8],
+      target: [0, 0.9, -2.4],
+    },
+  },
+  {
+    id: 'floor',
+    name: 'Ground Effect Floor & Venturi Tunnels',
+    category: 'aerodynamics',
+    categoryLabel: 'Aerodynamics',
+    meshId: 'mesh_floor',
+    explodedOffset: [0, -0.9, 0], // drop down
+    anchorPoint: [0.70, 0.12, -0.62], // outer floor edge winglet
+    description: 'The massive sculptured carbon-fiber floor featuring dual Venturi tunnels running along the entire underside of the car.',
+    primaryFunction: 'Creates ground effect suction by squeezing air through narrow throats, creating low pressure beneath the car that pulls it toward the road.',
+    engineeringSignificance: 'Re-introduced in the 2022 F1 regulations to generate "clean" downforce that does not create turbulent dirty wake for cars following behind.',
+    performanceImplications: 'Responsible for nearly 50% of the car\'s total grip. Keeping the floor sealed with ride-height stability is the secret to modern lap times.',
+    analogy: 'A powerful vacuum cleaner sticking the car to the road using pure Bernoulli physics, allowing cars to corner at up to 5G.',
+    keyStats: [
+      { label: 'Total Downforce Share', value: '~50-60%' },
+      { label: 'Ground Clearance', value: '15-40 mm' },
+      { label: 'Underfloor Planks', value: 'Titanium-skid Jabroc' },
+    ],
+    relatedComponentIds: ['diffuser', 'front_wing', 'monocoque'],
+    cameraPreset: {
+      position: [3.5, -0.2, 0],
+      target: [0, -0.2, 0],
+    },
+  },
+  {
+    id: 'diffuser',
+    name: 'Rear Diffuser',
+    category: 'aerodynamics',
+    categoryLabel: 'Aerodynamics',
+    meshId: 'mesh_diffuser',
+    explodedOffset: [0, -0.6, -1.0], // move backwards and slightly down
+    anchorPoint: [0, 0.22, -2.15], // upswept diffuser ramp
+    description: 'The upswept expanding channel at the rear floor that accelerates and expands underfloor air back to atmospheric pressure.',
+    primaryFunction: 'Pulls air smoothly through the Venturi tunnels beneath the car, multiplying the suction force generated by the floor.',
+    engineeringSignificance: 'Acts as the extraction pump of the entire underfloor aerodynamic system. Its height, strakes, and expansion angle determine floor efficiency.',
+    performanceImplications: 'Any stall or separation of airflow in the diffuser causes sudden loss of downforce, leading to snaps of snap oversteer.',
+    analogy: 'The exhaust nozzle of a vacuum cleaner: expanding the channel makes air rush through the floor even faster.',
+    keyStats: [
+      { label: 'Exit Area', value: 'Strictly FIA regulated' },
+      { label: 'Interaction', value: 'Tied to rear wing beam' },
+      { label: 'Material', value: 'Ultra-thin Carbon Composite' },
+    ],
+    relatedComponentIds: ['floor', 'rear_wing', 'gearbox'],
+    cameraPreset: {
+      position: [0, -0.2, -4.5],
+      target: [0, 0.2, -2.2],
+    },
+  },
+
+  // 2. Chassis & Safety
+  {
+    id: 'monocoque',
+    name: 'Carbon Monocoque & Survival Cell',
+    category: 'chassis',
+    categoryLabel: 'Chassis & Safety',
+    meshId: 'mesh_monocoque',
+    explodedOffset: [0, 0.2, 0], // lift slightly
+    anchorPoint: [0, 0.55, 0.35], // nosecone / survival tub transition
+    description: 'The ultra-rigid central carbon fiber tub that protects the driver and serves as the structural backbone of the entire car.',
+    primaryFunction: 'Protects the driver during violent impacts and acts as the mounting structure for the front suspension and rear power unit.',
+    engineeringSignificance: 'Constructed from aerospace-grade carbon fiber and aluminum honeycomb core. Capable of surviving 50G+ crashes, absorbing immense energy.',
+    performanceImplications: 'Torsional rigidity ensures suspension geometries behave with micron-level precision under punishing race loads.',
+    analogy: 'An indestructible personal armored pod that keeps the driver completely safe even in 300 km/h wall impacts.',
+    keyStats: [
+      { label: 'Weight', value: '~35 kg (bare)' },
+      { label: 'Impact Test', value: 'Tested up to 50G' },
+      { label: 'Material', value: 'Carbon fiber + Honeycomb' },
+    ],
+    relatedComponentIds: ['halo', 'engine_ice', 'suspension_front'],
+    cameraPreset: {
+      position: [2.5, 1.2, 0.8],
+      target: [0, 0.4, 0.5],
+    },
+  },
+  {
+    id: 'halo',
+    name: 'Titanium Halo Protection Ring',
+    category: 'chassis',
+    categoryLabel: 'Chassis & Safety',
+    meshId: 'mesh_halo',
+    explodedOffset: [0, 1.4, 0], // lift high above cockpit
+    anchorPoint: [0, 0.82, 0.16], // center titanium pillar junction
+    description: 'The curved titanium safety bar mounted directly above the cockpit to shield the driver\'s head from flying debris and rollovers.',
+    primaryFunction: 'Prevents external objects, tires, or barriers from striking the driver\'s helmet during an accident.',
+    engineeringSignificance: 'Forged from Grade 5 aerospace titanium, weighing just 7 kg yet able to withstand a static load of 125 kilonewtons (12 tonnes).',
+    performanceImplications: 'Has saved multiple drivers from catastrophic injuries, including Romain Grosjean (Bahrain 2020) and Lewis Hamilton (Monza 2021).',
+    analogy: 'A 7-kilogram titanium shield capable of holding the weight of two full-size African elephants above the cockpit.',
+    keyStats: [
+      { label: 'Weight', value: '7 kg' },
+      { label: 'Load Capacity', value: '12,000 kg (12 tonnes)' },
+      { label: 'Material', value: 'Grade 5 Aerospace Titanium' },
+    ],
+    relatedComponentIds: ['monocoque', 'steering_wheel'],
+    cameraPreset: {
+      position: [0.8, 2.0, 0.6],
+      target: [0, 0.8, 0.2],
+    },
+  },
+
+  // 3. Suspension & Steering
+  {
+    id: 'suspension_front',
+    name: 'Front Wishbone & Pushrod Suspension',
+    category: 'suspension',
+    categoryLabel: 'Suspension & Steering',
+    meshId: 'mesh_suspension_front',
+    explodedOffset: [0, 0.2, 0.5], // lift and push forward
+    anchorPoint: [0.4, 0.38, 1.27], // upper wishbone joint
+    description: 'Double carbon-fiber wishbone linkages connecting the front wheels to internal heave springs, dampers, and torsion bars.',
+    primaryFunction: 'Controls the tire contact patch, absorbs curb strikes, and maintains aerodynamic platform stability over undulating track surfaces.',
+    engineeringSignificance: 'Aerodynamically profiled wishbone arms act as airfoils themselves, directing airflow purposefully into the sidepod radiators and underfloor.',
+    performanceImplications: 'A stable mechanical suspension platform prevents porpoising and maximizes mechanical grip in slow hairpin corners.',
+    analogy: 'The car\'s acrobatic limbs that keep the tires pressed perfectly flat on the asphalt through every bump and violent curb.',
+    keyStats: [
+      { label: 'Mechanism', value: 'Pushrod / Pullrod' },
+      { label: 'Arm Profile', value: 'Aerodynamic Teardrop Wing' },
+      { label: 'Dampers', value: 'Internal Inerters & Torsion' },
+    ],
+    relatedComponentIds: ['tires_front', 'monocoque', 'steering_wheel'],
+    cameraPreset: {
+      position: [2.2, 0.8, 2.5],
+      target: [0, 0.3, 2.0],
+    },
+  },
+  {
+    id: 'steering_wheel',
+    name: 'Custom F1 Digital Steering Wheel',
+    category: 'suspension',
+    categoryLabel: 'Suspension & Steering',
+    meshId: 'mesh_steering_wheel',
+    explodedOffset: [0, 1.1, 0], // lift out of cockpit
+    anchorPoint: [0, 0.62, 0.50], // top rim of steering wheel
+    description: 'The driver\'s command hub featuring a bright LCD display, rotary dials, tactile buttons, DRS paddle, and dual-clutch paddles.',
+    primaryFunction: 'Steers the vehicle while allowing the driver to adjust brake balance, differential settings, engine modes, radio, and pit limiter on the fly.',
+    engineeringSignificance: 'Manufactured bespoke for each driver\'s hand grip. Contains up to 25 buttons, 5 rotary switches, and costs over $50,000.',
+    performanceImplications: 'Drivers change settings up to 40 times per lap depending on corner type, tire wear, and fuel loads.',
+    analogy: 'A $50,000 supercar controller and mission-control computer combined into one carbon-fiber racing wheel.',
+    keyStats: [
+      { label: 'Cost', value: '~$50,000 USD' },
+      { label: 'Buttons & Dials', value: '25+ switches & paddles' },
+      { label: 'Display', value: '4.3-inch OLED telemetry screen' },
+    ],
+    relatedComponentIds: ['monocoque', 'halo', 'brakes'],
+    cameraPreset: {
+      position: [0, 1.2, 0.8],
+      target: [0, 0.6, 0.3],
+    },
+  },
+
+  // 4. Tires & Brakes
+  {
+    id: 'tires_front',
+    name: 'Front 18-Inch Pirelli Wheels & Slick Tires',
+    category: 'tires',
+    categoryLabel: 'Tires & Brakes',
+    meshId: 'mesh_tires_front',
+    explodedOffset: [1.15, 0, 0], // explode outward horizontally
+    anchorPoint: [0.76, 0.36, 1.45], // outer face of front right wheel
+    description: 'Low-profile 18-inch wheels fitted with bespoke Pirelli P-Zero racing slick compound rubber with aerodynamic wheel covers.',
+    primaryFunction: 'The car\'s only point of contact with the circuit surface, converting horsepower, aerodynamic downforce, and braking torque into motion.',
+    engineeringSignificance: '18-inch low profile sidewalls reduced tire bounce in modern regulations. Operating window is narrow: 100°C to 110°C is required for peak grip.',
+    performanceImplications: 'Tire temperature management dictates race strategy. Too cold = understeer and graining; too hot = thermal degradation and blistering.',
+    analogy: 'The running shoes of the F1 car: super sticky when warm, but wear down lap by lap like an eraser on paper.',
+    keyStats: [
+      { label: 'Rim Diameter', value: '18 inches' },
+      { label: 'Ideal Temp', value: '100°C to 110°C' },
+      { label: 'Compounds', value: 'Soft, Medium, Hard, Inter, Wet' },
+    ],
+    relatedComponentIds: ['brakes', 'suspension_front', 'tires_rear'],
+    cameraPreset: {
+      position: [2.6, 0.6, 1.6],
+      target: [0.8, 0.36, 1.45],
+    },
+  },
+  {
+    id: 'tires_rear',
+    name: 'Rear 18-Inch Wide Wheels & Slick Tires',
+    category: 'tires',
+    categoryLabel: 'Tires & Brakes',
+    meshId: 'mesh_tires_rear',
+    explodedOffset: [1.15, 0, 0], // explode outward horizontally rear
+    anchorPoint: [0.73, 0.36, -1.95], // outer face of rear right wheel
+    description: 'Wider rear tires (405mm width) designed to transfer 1,000+ hybrid horsepower directly to the circuit without wheelspin.',
+    primaryFunction: 'Provides longitudinal traction for blistering acceleration (0-100 km/h in 2.4s) and lateral stability under high-speed corner exit.',
+    engineeringSignificance: 'Rear tires bear massive torque and thermal load from the internal combustion engine and 160hp electric motor.',
+    performanceImplications: 'Rear tire overheating leads to instant traction loss, forcing the driver to slide and wear the rubber exponentially faster.',
+    analogy: 'Giant sticky rolling rollers that launch the car out of corners like a rocket ship.',
+    keyStats: [
+      { label: 'Rear Width', value: '405 mm' },
+      { label: '0-100 km/h Traction', value: '2.4 seconds' },
+      { label: 'Rotational Speed', value: 'Up to 3,000 RPM at 350 km/h' },
+    ],
+    relatedComponentIds: ['tires_front', 'gearbox', 'brakes'],
+    cameraPreset: {
+      position: [2.8, 0.6, -1.9],
+      target: [0.75, 0.36, -1.95],
+    },
+  },
+  {
+    id: 'brakes',
+    name: 'Carbon-Ceramic Brakes & 1000-Hole Rotors',
+    category: 'tires',
+    categoryLabel: 'Tires & Brakes',
+    meshId: 'mesh_brakes',
+    explodedOffset: [0.6, 0, 0], // between chassis and wheel
+    anchorPoint: [0.60, 0.36, 1.45], // brake caliper position
+    description: 'Carbon-carbon composite discs with over 1,000 miniature cooling ventilation holes clamped by monobloc aluminum calipers.',
+    primaryFunction: 'Decelerates the F1 car from 330 km/h to 80 km/h in less than 2.0 seconds, exerting over 5G of decelerating force on the driver.',
+    engineeringSignificance: 'Operates at extreme temperatures between 400°C and 1,000°C (glowing cherry red). Cold carbon brakes offer almost zero friction.',
+    performanceImplications: 'Drivers must brake with over 120 kg of human leg pressure on the pedal, balancing mechanical front braking with electric motor regeneration at the rear.',
+    analogy: 'Blowing on a red-hot iron skillet: glowing at 1,000°C, capable of stopping a 300 km/h car in the length of a tennis court.',
+    keyStats: [
+      { label: 'Peak Temperature', value: '1,000°C+ (cherry red)' },
+      { label: 'Ventilation Holes', value: 'Up to 1,400 per disc' },
+      { label: 'Deceleration', value: '5.5G force' },
+    ],
+    relatedComponentIds: ['tires_front', 'tires_rear', 'energy_mgu_k'],
+    cameraPreset: {
+      position: [2.0, 0.5, 1.6],
+      target: [0.6, 0.36, 1.45],
+    },
+  },
+
+  // 5. Hybrid Power Unit & Transmission
+  {
+    id: 'engine_ice',
+    name: '1.6L V6 Turbocharged Combustion Engine (ICE)',
+    category: 'powertrain',
+    categoryLabel: 'Hybrid Power Unit',
+    meshId: 'mesh_engine_ice',
+    explodedOffset: [0, 0.6, 0], // lift upwards from chassis center
+    anchorPoint: [0, 0.48, -0.90], // top of engine cylinder bank
+    description: 'The bespoke 1.6-liter, 90-degree turbocharged V6 internal combustion engine producing around 750-800 horsepower at 15,000 RPM.',
+    primaryFunction: 'Burns fuel with ultra-high thermal efficiency to generate baseline mechanical propulsion for the car.',
+    engineeringSignificance: 'Achieves over 50% thermal efficiency (compared to 30-35% in ordinary road cars), making it the most thermally efficient internal combustion engine on Earth.',
+    performanceImplications: 'Fuel flow is strictly capped by the FIA at 100 kg/hour, forcing teams to extract maximum mechanical power per drop of fuel.',
+    analogy: 'The hyper-compact beating heart of the machine, squeezing 800 horsepower out of an engine smaller than what you find in a family hatchback.',
+    keyStats: [
+      { label: 'Displacement', value: '1.6 Liters V6' },
+      { label: 'Thermal Efficiency', value: '> 50%' },
+      { label: 'Rev Limit', value: '15,000 RPM' },
+    ],
+    relatedComponentIds: ['turbocharger', 'energy_mgu_h', 'energy_mgu_k', 'energy_store'],
+    cameraPreset: {
+      position: [1.8, 1.4, -0.9],
+      target: [0, 0.5, -0.9],
+    },
+  },
+  {
+    id: 'turbocharger',
+    name: 'Turbocharger & Exhaust Turbine',
+    category: 'powertrain',
+    categoryLabel: 'Hybrid Power Unit',
+    meshId: 'mesh_turbocharger',
+    explodedOffset: [0, 0.8, -0.3], // lift higher above ICE
+    anchorPoint: [0, 0.65, -1.30], // turbo snailshell
+    description: 'A turbine-driven forced induction device that forces dense pressurized air into the engine cylinders for massive combustion power.',
+    primaryFunction: 'Spins up to 100,000 RPM using waste exhaust gas energy to pack oxygen into the 1.6L combustion chambers.',
+    engineeringSignificance: 'Directly linked to the MGU-H electric motor via a shaft running through the center of the engine V-valley.',
+    performanceImplications: 'Eliminates turbo lag entirely by having the electric motor spin the compressor instantly before exhaust pressure builds.',
+    analogy: 'A hurricane-force wind turbine that forces oxygen into the engine fire, linked with an electric booster so there is zero delay when stepping on the gas.',
+    keyStats: [
+      { label: 'Max RPM', value: '100,000+ RPM' },
+      { label: 'Boost Pressure', value: '~3.5 to 4.0 Bar' },
+      { label: 'Zero Lag', value: 'Assisted by MGU-H' },
+    ],
+    relatedComponentIds: ['engine_ice', 'energy_mgu_h'],
+    cameraPreset: {
+      position: [1.5, 1.5, -1.3],
+      target: [0, 0.65, -1.3],
+    },
+  },
+  {
+    id: 'energy_mgu_k',
+    name: 'MGU-K (Kinetic Motor Generator Unit)',
+    category: 'powertrain',
+    categoryLabel: 'Hybrid Power Unit',
+    meshId: 'mesh_energy_mgu_k',
+    explodedOffset: [0.5, 0.4, 0], // move out to the side
+    anchorPoint: [0.25, 0.32, -0.65], // MGU-K motor body
+    description: 'Electric motor-generator connected directly to the engine crankshaft that recovers braking energy and deploys 160 horsepower.',
+    primaryFunction: 'Under braking: acts as a generator slowing the car and sending 2MJ/lap to the battery. Under acceleration: deploys 120kW (160hp) to the wheels.',
+    engineeringSignificance: 'Provides instant electrical torque with zero latency, making modern F1 cars explode out of slow corners like electric hypercars.',
+    performanceImplications: 'If the MGU-K fails during a race, the car immediately loses 160 horsepower and rear brake balance goes haywire.',
+    analogy: 'A two-way electric dynamo: catches energy that would be wasted as heat under braking, then slingshots it back into the wheels like a slingshot boost.',
+    keyStats: [
+      { label: 'Max Power Output', value: '120 kW (160 hp)' },
+      { label: 'Max Energy Harvested', value: '2 MJ per lap' },
+      { label: 'Deployment Limit', value: '4 MJ per lap' },
+    ],
+    relatedComponentIds: ['engine_ice', 'energy_store', 'brakes'],
+    cameraPreset: {
+      position: [1.6, 0.9, -0.65],
+      target: [0.25, 0.35, -0.65],
+    },
+  },
+  {
+    id: 'energy_store',
+    name: 'Energy Store (Lithium-Ion Battery Pack)',
+    category: 'powertrain',
+    categoryLabel: 'Hybrid Power Unit',
+    meshId: 'mesh_energy_store',
+    explodedOffset: [0, -0.4, 0], // drop down beneath cockpit seat
+    anchorPoint: [0, 0.22, -0.15], // center battery pack
+    description: 'The high-voltage lithium-ion battery pack mounted safely in an armored casing directly under the fuel cell.',
+    primaryFunction: 'Stores electrical energy harvested from the MGU-K and MGU-H and delivers high-voltage power instantaneously when the driver demands boost.',
+    engineeringSignificance: 'Regulated to weigh between 20-25 kg. Operates at up to 800 volts with specialized liquid cooling circuits to prevent thermal runaway.',
+    performanceImplications: 'Drivers manage state of charge (SoC) tactically: saving charge during defending, then deploying full battery power to execute an overtake.',
+    analogy: 'A hyper-dense power bank tucked safely inside the car that recharges and discharges in mere seconds throughout every single lap.',
+    keyStats: [
+      { label: 'Battery Weight', value: '20 - 25 kg' },
+      { label: 'Operating Voltage', value: '~800 Volts' },
+      { label: 'Capacity', value: '4 Megajoules usable' },
+    ],
+    relatedComponentIds: ['energy_mgu_k', 'engine_ice', 'monocoque'],
+    cameraPreset: {
+      position: [1.8, 0.5, -0.15],
+      target: [0, 0.22, -0.15],
+    },
+  },
+  {
+    id: 'gearbox',
+    name: '8-Speed Seamless Carbon Gearbox',
+    category: 'powertrain',
+    categoryLabel: 'Hybrid Power Unit',
+    meshId: 'mesh_gearbox',
+    explodedOffset: [0, 0.3, -0.8], // move rearward
+    anchorPoint: [0, 0.38, -1.65], // gearbox cassette body
+    description: 'The 8-speed semi-automatic sequential gearbox housed inside an ultra-stiff carbon fiber cassette that doubles as the rear structural spine.',
+    primaryFunction: 'Transfers engine and motor torque to the rear differential with zero torque interruption during gearshifts.',
+    engineeringSignificance: 'Seamless shift technology engages the next gear while the previous gear is still disengaging, taking under 5 milliseconds (faster than the blink of an eye).',
+    performanceImplications: 'The carbon gearbox casing also serves as the rear suspension mounting structure, enduring immense cornering and braking forces.',
+    analogy: 'Shifts gears in 5 milliseconds—faster than you can blink—without losing a single millimeter of forward acceleration.',
+    keyStats: [
+      { label: 'Gear Ratios', value: '8 Forward + 1 Reverse' },
+      { label: 'Shift Time', value: '< 0.005 seconds (seamless)' },
+      { label: 'Casing Material', value: 'Structural Carbon Composite' },
+    ],
+    relatedComponentIds: ['engine_ice', 'rear_wing', 'diffuser', 'tires_rear'],
+    cameraPreset: {
+      position: [1.8, 1.0, -1.8],
+      target: [0, 0.4, -1.65],
+    },
+  },
+];
