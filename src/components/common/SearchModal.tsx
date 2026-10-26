@@ -6,6 +6,7 @@ import { CIRCUITS } from '../../data/circuits';
 import { CAR_COMPONENTS } from '../../data/carComponents';
 import { GLOSSARY } from '../../data/glossary';
 import { LESSONS } from '../../data/lessons';
+import { RADIO_MESSAGES } from '../../data/radioMessages';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -45,9 +46,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   const matchedCircuits = q ? CIRCUITS.filter((c) => c.name.toLowerCase().includes(q) || c.country.toLowerCase().includes(q)) : [];
   const matchedLessons = q ? LESSONS.filter((l) => l.title.toLowerCase().includes(q) || l.overview.toLowerCase().includes(q)) : [];
   const matchedTerms = q ? GLOSSARY.filter((g) => g.term.toLowerCase().includes(q) || g.simpleDefinition.toLowerCase().includes(q)) : [];
+  const matchedRadios = q ? RADIO_MESSAGES.filter((r) => r.phrase.toLowerCase().includes(q) || r.plainTranslation.toLowerCase().includes(q) || r.speakerName.toLowerCase().includes(q)) : [];
 
   const totalResults = matchedDrivers.length + matchedTeams.length + matchedComponents.length +
-                       matchedCircuits.length + matchedLessons.length + matchedTerms.length;
+                       matchedCircuits.length + matchedLessons.length + matchedTerms.length + matchedRadios.length;
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/60 backdrop-blur-sm">
@@ -186,6 +188,33 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                           <span className="text-plum/50 ml-2">({l.estimatedMinutes} min)</span>
                         </div>
                         <ArrowRight className="w-3.5 h-3.5 text-racing" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Radio Transmissions */}
+              {matchedRadios.length > 0 && (
+                <div>
+                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-plum/40 mb-2">
+                    Pit Wall Radio Transmissions ({matchedRadios.length})
+                  </h4>
+                  <div className="space-y-1.5">
+                    {matchedRadios.slice(0, 4).map((r) => (
+                      <button
+                        key={r.id}
+                        onClick={() => {
+                          onNavigate('radio', r.id);
+                          onClose();
+                        }}
+                        className="w-full text-left p-2.5 rounded-xl hover:bg-cosmic-100 flex items-center justify-between text-xs transition-colors border border-cosmic-200/50"
+                      >
+                        <div>
+                          <span className="font-bold text-plum italic">"{r.phrase}"</span>
+                          <span className="text-racing block text-[10px] mt-0.5">{r.speakerName} • {r.circuitName}</span>
+                        </div>
+                        <ArrowRight className="w-3.5 h-3.5 text-racing shrink-0" />
                       </button>
                     ))}
                   </div>

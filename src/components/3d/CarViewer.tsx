@@ -1,4 +1,4 @@
-import React, { Suspense, useRef, useEffect } from 'react';
+import React, { Suspense, useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, ContactShadows, Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -28,7 +28,8 @@ const CameraController: React.FC<{
   explodeFactor: number;
   autoRotate: boolean;
   theme?: 'studio-ivory' | 'studio-dark';
-}> = ({ preset, selectedComponentId, explodeFactor, autoRotate }) => {
+  presetTrigger?: number;
+}> = ({ preset, selectedComponentId, explodeFactor, autoRotate, presetTrigger }) => {
   const { size } = useThree();
   const controlsRef = useRef<any>(null);
 
@@ -39,11 +40,31 @@ const CameraController: React.FC<{
   // Initial camera position & lookAt target (shifted toward the car's center of mass at [0, 0.40, 0.25])
   const targetCamPos = useRef(new THREE.Vector3(5.7 * distScale, 2.35 * distScale, 4.6 * distScale));
   const targetLookAt = useRef(new THREE.Vector3(0, 0.40, 0.25));
-  const isAnimating = useRef(true);
+  const isAnimating = useRef(false);
   const isUserInteracting = useRef(false);
+  const isInitialMount = useRef(true);
+  const prevPreset = useRef(preset);
+  const prevSelectedComp = useRef(selectedComponentId);
+  const prevTrigger = useRef(presetTrigger);
 
+  // Update target coordinates and trigger animation only when preset, trigger, or selected component changes
   useEffect(() => {
-    isAnimating.current = true;
+    if (isInitialMount.current) {
+      return;
+    }
+
+    const presetChanged = preset !== prevPreset.current;
+    const triggerChanged = presetTrigger !== undefined && presetTrigger !== prevTrigger.current;
+    const compChanged = selectedComponentId !== prevSelectedComp.current;
+
+    prevPreset.current = preset;
+    prevTrigger.current = presetTrigger;
+    prevSelectedComp.current = selectedComponentId;
+
+    if (!presetChanged && !triggerChanged && !compChanged) {
+      return;
+    }
+
     if (selectedComponentId && explodeFactor > 0.1) {
       const comp = CAR_COMPONENTS.find((c) => c.id === selectedComponentId);
       if (comp) {
@@ -55,6 +76,7 @@ const CameraController: React.FC<{
         );
         targetLookAt.current.copy(compPos);
         targetCamPos.current.set(compPos.x + 2.6, compPos.y + 1.2, compPos.z + 2.6);
+        isAnimating.current = true;
         return;
       }
     }
@@ -87,10 +109,22 @@ const CameraController: React.FC<{
         targetLookAt.current.set(0, 0.40, 0.25);
         break;
     }
-  }, [preset, selectedComponentId, explodeFactor, distScale]);
+    isAnimating.current = true;
+  }, [preset, selectedComponentId, explodeFactor, distScale, presetTrigger]);
 
   useFrame(() => {
-    if (controlsRef.current && isAnimating.current && !isUserInteracting.current) {
+    if (!controlsRef.current) return;
+
+    if (isInitialMount.current) {
+      // Initialize controls target and camera position cleanly on first ready frame without fighting autoRotate
+      controlsRef.current.target.copy(targetLookAt.current);
+      controlsRef.current.object.position.copy(targetCamPos.current);
+      controlsRef.current.update();
+      isInitialMount.current = false;
+      return;
+    }
+
+    if (isAnimating.current && !isUserInteracting.current) {
       controlsRef.current.object.position.lerp(targetCamPos.current, 0.08);
       controlsRef.current.target.lerp(targetLookAt.current, 0.08);
       controlsRef.current.update();
@@ -101,6 +135,7 @@ const CameraController: React.FC<{
       ) {
         controlsRef.current.object.position.copy(targetCamPos.current);
         controlsRef.current.target.copy(targetLookAt.current);
+        controlsRef.current.update();
         isAnimating.current = false;
       }
     }
@@ -114,7 +149,7 @@ const CameraController: React.FC<{
       minDistance={1.8}
       maxDistance={12.0}
       maxPolarAngle={Math.PI / 2 - 0.03}
-      autoRotate={autoRotate}
+      autoRotate={autoRotate && !isAnimating.current && !isUserInteracting.current}
       autoRotateSpeed={1.0}
       onStart={() => {
         isUserInteracting.current = true;
@@ -317,6 +352,12 @@ export const CarViewer: React.FC<CarViewerProps> = ({
 }) => {
   const isIvory = theme === 'studio-ivory';
   const selectedComponent = CAR_COMPONENTS.find((c) => c.id === selectedComponentId);
+  const [presetTrigger, setPresetTrigger] = useState(0);
+
+  const handlePresetClick = (presetId: string) => {
+    onCameraPresetChange(presetId);
+    setPresetTrigger((prev) => prev + 1);
+  };
 
   return (
     <div
@@ -405,6 +446,7 @@ export const CarViewer: React.FC<CarViewerProps> = ({
             explodeFactor={explodeFactor}
             autoRotate={autoRotate}
             theme={theme}
+            presetTrigger={presetTrigger}
           />
         </Suspense>
       </Canvas>
@@ -450,7 +492,7 @@ export const CarViewer: React.FC<CarViewerProps> = ({
           ].map((item) => (
             <button
               key={item.id}
-              onClick={() => onCameraPresetChange(item.id)}
+              onClick={() => handlePresetClick(item.id)}
               className={`px-2.5 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold rounded-xl whitespace-nowrap transition-all ${
                 cameraPreset === item.id
                   ? 'bg-racing text-white shadow-sm'
@@ -477,18 +519,24 @@ export const CarViewer: React.FC<CarViewerProps> = ({
         >
           {/* Orbit Auto-Rotate Toggle */}
           <button
-            onClick={onToggleAutoRotate}
-            title="Toggle Auto Rotation"
-            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleAutoRotate();
+            }}
+            title={autoRotate ? 'Pause Auto Rotation' : 'Start Auto Rotation'}
+            aria-pressed={autoRotate}
+            aria-label={autoRotate ? 'Pause Auto Rotation' : 'Start Auto Rotation'}
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
               autoRotate
-                ? 'bg-blush text-plum shadow-sm'
+                ? 'bg-blush text-plum shadow-sm ring-1 ring-racing/30'
                 : isIvory
-                ? 'text-plum/75 hover:bg-cosmic-100'
-                : 'text-white/80 hover:bg-white/10'
+                ? 'text-plum/75 hover:bg-cosmic-100 hover:text-plum'
+                : 'text-white/80 hover:bg-white/10 hover:text-white'
             }`}
           >
-            <RotateCw className={`w-3.5 h-3.5 ${autoRotate ? 'animate-spin' : ''}`} />
-            <span className="hidden sm:inline">Orbit</span>
+            <RotateCw className={`w-3.5 h-3.5 transition-transform ${autoRotate ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">{autoRotate ? 'Orbiting' : 'Orbit'}</span>
           </button>
 
           <div className={`hidden sm:block w-px h-5 ${isIvory ? 'bg-plum/15' : 'bg-white/15'}`} />

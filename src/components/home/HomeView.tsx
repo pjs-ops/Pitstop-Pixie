@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CarViewer } from '../3d/CarViewer';
-import { Sparkles, ArrowRight, Trophy, Flag, Wrench, Compass, Cpu, BookOpen, Flame, CheckCircle2 } from 'lucide-react';
+import { Sparkles, ArrowRight, Trophy, Flag, Wrench, Compass, BookOpen, Flame, CheckCircle2, Radio } from 'lucide-react';
 import { useLearning } from '../../context/LearningContext';
 import { BADGES } from '../../data/badges';
 import { LESSONS } from '../../data/lessons';
@@ -12,12 +12,18 @@ interface HomeViewProps {
 export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
   const { progress } = useLearning();
 
+  // Check user preference for reduced motion
+  const prefersReducedMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   // 3D Hero states
   const [explodeFactor, setExplodeFactor] = useState<number>(0.0);
   const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
   const [hoveredComponentId, setHoveredComponentId] = useState<string | null>(null);
   const [cameraPreset, setCameraPreset] = useState<string>('iso');
-  const [autoRotate, setAutoRotate] = useState<boolean>(true);
+  const [autoRotate, setAutoRotate] = useState<boolean>(!prefersReducedMotion);
 
   const completedCount = progress.completedLessonIds.length;
   const nextLesson = LESSONS.find((l) => !progress.completedLessonIds.includes(l.id)) || LESSONS[0];
@@ -96,7 +102,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
               cameraPreset={cameraPreset}
               onCameraPresetChange={setCameraPreset}
               autoRotate={autoRotate}
-              onToggleAutoRotate={() => setAutoRotate(!autoRotate)}
+              onToggleAutoRotate={() => setAutoRotate((prev) => !prev)}
             />
           </div>
         </div>
@@ -156,17 +162,17 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             </div>
 
             <button
-              onClick={() => onNavigate('strategy')}
+              onClick={() => onNavigate('raceday')}
               className="w-full py-2.5 rounded-xl bg-white hover:bg-cosmic-100 border border-blush text-racing text-xs font-bold flex items-center justify-center space-x-1.5 transition-all shadow-sm"
             >
-              <span>Test Undercut Simulator</span>
+              <span>Learn in Race Day 101</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
       </section>
 
-      {/* 3. SIX CORE LEARNING PORTALS */}
+      {/* 3. FIVE CORE LEARNING PORTALS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-left mb-8">
           <div className="text-xs font-bold uppercase tracking-wider text-racing mb-1">
@@ -176,7 +182,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             Explore the F1 Universe
           </h2>
           <p className="text-xs sm:text-sm text-plum/70 mt-1">
-            Choose your learning path through engineering, driver personalities, circuits, and telemetry simulations.
+            Choose your learning path through engineering, driver personalities, circuits, and racecraft lessons.
           </p>
         </div>
 
@@ -228,13 +234,13 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
               badge: 'Gamification & XP',
             },
             {
-              id: 'strategy',
-              title: 'Strategy Room',
-              subtitle: 'Telemetry Simulations',
-              description: 'Run interactive simulations for tire degradation curves, undercut calculators, 1-stop vs 2-stop, and rain crossovers.',
-              icon: Cpu,
-              color: 'bg-purple-100 text-purple-900',
-              badge: 'Live Simulators',
+              id: 'radio',
+              title: 'Radio Decoder',
+              subtitle: 'Pit Wall Communications',
+              description: 'Decode 24 authentic driver-engineer radio transmissions, unpack strategic jargon, and make live branching tactical calls.',
+              icon: Radio,
+              color: 'bg-racing/10 text-racing',
+              badge: 'New Interactive Lab',
             },
           ].map((portal) => {
             const Icon = portal.icon;

@@ -171,7 +171,7 @@ export const PitSchoolView: React.FC = () => {
               { id: 'daily', label: 'Daily Challenge', icon: Flame },
               { id: 'components', label: 'Car Part Quiz', icon: Sparkles },
               { id: 'flags', label: 'Flag Master', icon: Trophy },
-              { id: 'strategy', label: 'Strategy Room', icon: Award },
+              { id: 'strategy', label: 'Race Strategy', icon: Award },
             ].map((cat) => {
               const Icon = cat.icon;
               return (

@@ -184,7 +184,7 @@ export const GarageView: React.FC<GarageViewProps> = ({ initialComponentId }) =>
             cameraPreset={cameraPreset}
             onCameraPresetChange={setCameraPreset}
             autoRotate={autoRotate}
-            onToggleAutoRotate={() => setAutoRotate(!autoRotate)}
+            onToggleAutoRotate={() => setAutoRotate((prev) => !prev)}
           />
 
           {/* Category Filter Pills below 3D */}

@@ -8,7 +8,7 @@ import { PaddockView } from './components/paddock/PaddockView';
 import { CircuitSafariView } from './components/circuit/CircuitSafariView';
 import { RaceDayView } from './components/raceday/RaceDayView';
 import { PitSchoolView } from './components/school/PitSchoolView';
-import { StrategyRoomView } from './components/strategy/StrategyRoomView';
+import { RadioRoomView } from './components/radio/RadioRoomView';
 import { useLearning } from './context/LearningContext';
 import { X, Sparkles, Trophy, Award } from 'lucide-react';
 
@@ -16,22 +16,25 @@ export const App: React.FC = () => {
   // Sync tab with URL hash for browser history and bookmarking
   const getInitialTab = (): string => {
     const hash = window.location.hash.replace('#', '');
-    const validTabs = ['home', 'garage', 'paddock', 'circuits', 'raceday', 'school', 'strategy'];
+    const validTabs = ['home', 'garage', 'paddock', 'circuits', 'raceday', 'school', 'radio'];
     return validTabs.includes(hash) ? hash : 'home';
   };
 
   const [activeTab, setActiveTab] = useState<string>(getInitialTab);
   const [selectedGarageComponent, setSelectedGarageComponent] = useState<string | null>(null);
+  const [selectedRadioId, setSelectedRadioId] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
   const { currentToast, dismissToast } = useLearning();
 
-  // Listen to hash changes
+  // Listen to hash changes (redirect old or invalid tabs to home)
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '');
-      const validTabs = ['home', 'garage', 'paddock', 'circuits', 'raceday', 'school', 'strategy'];
+      const validTabs = ['home', 'garage', 'paddock', 'circuits', 'raceday', 'school', 'radio'];
       if (validTabs.includes(hash)) {
         setActiveTab(hash);
+      } else {
+        setActiveTab('home');
       }
     };
     window.addEventListener('hashchange', handleHashChange);
@@ -43,6 +46,9 @@ export const App: React.FC = () => {
     window.location.hash = tabId;
     if (tabId === 'garage' && param) {
       setSelectedGarageComponent(param);
+    }
+    if (tabId === 'radio' && param) {
+      setSelectedRadioId(param);
     }
   };
 
@@ -79,7 +85,7 @@ export const App: React.FC = () => {
         {activeTab === 'circuits' && <CircuitSafariView />}
         {activeTab === 'raceday' && <RaceDayView />}
         {activeTab === 'school' && <PitSchoolView />}
-        {activeTab === 'strategy' && <StrategyRoomView />}
+        {activeTab === 'radio' && <RadioRoomView initialRadioId={selectedRadioId} onNavigateTab={handleSelectTab} />}
       </main>
 
       {/* Global Footer */}

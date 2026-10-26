@@ -54,7 +54,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           {/* Quick Links Column 2 */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-plum mb-3">
-              Learn & Simulate
+              Learn & Test
             </h4>
             <ul className="space-y-2 text-xs text-plum/70">
               <li>
@@ -68,8 +68,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('strategy')} className="hover:text-racing transition-colors">
-                  Strategy Room Simulations
+                <button onClick={() => onNavigate('radio')} className="hover:text-racing transition-colors font-bold text-racing flex items-center space-x-1">
+                  <span>Team Radio Decoder 📻</span>
                 </button>
               </li>
             </ul>

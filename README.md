@@ -81,14 +81,23 @@ The complete, frontend-first Formula 1 learning platform engineered for motorspo
 - Trophy cabinet of persistent badges
 - Reset progress option with confirmation
 
-### 7. Strategy Room (Telemetry & Race Simulations)
-- **Tire Degradation Simulator**: Soft vs Medium vs Hard lap delta over 35 laps with track temp and abrasion controls
-- **Undercut Calculator**: Input gap to leader and out-lap push delta to predict pit stop overtakes
-- **1-Stop vs 2-Stop Calculator**: Compare race times with adjustable pit loss time
-- **Weather Crossover**: Rainfall intensity slider to predict when slicks become unviable
+### 7. Team Radio Decoder 📻 (Interactive Pit Wall Communications Lab)
+- **Tagline**: *Every message has a story.*
+- **24 Original Training Scenarios** across 6 tactical categories:
+  1. Team Orders (position swaps, multi-car coordination, illegal pass returns)
+  2. Tire Management (thermal cliffs, lift-and-coast cooling, graining recovery, stint extension)
+  3. Pit Stops (Box box calls, clean air pit windows, entry commitments, double-stack management)
+  4. Overtaking & DRS (1.0s gap rules, dirty air thermal traps, breaking the tow, electrical clipping)
+  5. Safety Cars & Flags (cheap pit stops, VSC positive deltas, waved yellow lifts, leader restart launches)
+  6. Race Strategy (undercut sprints, overcuts in traffic, rain crossover delays, 1-stop to 2-stop conversions)
+- **Interactive Audio & Speech Synthesis Player**: Web Speech API speech synthesis with motorsport voice tuning, soundwave frequency animation bars, and accessible transcripts.
+- **Branching Race Decision Scenarios**: Signature post-decode interaction evaluating tactical consequences, optimal moves, and strategic tradeoffs.
+- **Searchable Terminology Glossary**: 15+ beginner terms (Box box, Undercut, Overcut, Deg, Lift & Coast, DRS, Dirty Air, Delta Time, Track Position, etc.) with real-world analogies and race significance.
+- **Guided Radio Academy Mode**: 5-step structured walkthrough with progressive debriefs and completion badges.
+- **Progress Tracking & Persistence**: Deterministic scoring, single-award XP protection, streak tracking, and 5 dedicated badges (*First Transmission*, *Radio Rookie*, *Strategy Listener*, *Pit Wall Pro*, *Paddock Decoder*).
 
 ### 8. Global Search & Shell
-- Press `/` or `Ctrl+K` to search across all components, circuits, drivers, teams, and terms
+- Press `/` or `Ctrl+K` to search across all components, circuits, drivers, teams, radio transmissions, and glossary terms
 - Responsive navigation with live XP and level pill
 - LocalStorage persistence with duplicate award prevention
 

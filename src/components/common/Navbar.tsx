@@ -23,7 +23,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'circuits', label: 'Circuit Safari' },
     { id: 'raceday', label: 'Race Day 101' },
     { id: 'school', label: 'Pit School' },
-    { id: 'strategy', label: 'Strategy Room' },
+    { id: 'radio', label: 'Radio Decoder 📻' },
   ];
 
   const handleNavClick = (id: string) => {
